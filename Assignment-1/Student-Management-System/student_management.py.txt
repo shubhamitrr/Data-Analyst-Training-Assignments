@@ -1,0 +1,202 @@
+import json
+
+
+class Student:
+    def __init__(self, roll_no, name, marks):
+        self.roll_no = roll_no
+        self.name = name
+        self.marks = marks
+
+    def calculate_total(self):
+        return sum(self.marks.values())
+
+    def calculate_percentage(self):
+        total = self.calculate_total()
+        return total / len(self.marks)
+
+    def calculate_grade(self):
+        percentage = self.calculate_percentage()
+
+        if percentage >= 90:
+            return "A+"
+        elif percentage >= 80:
+            return "A"
+        elif percentage >= 70:
+            return "B"
+        elif percentage >= 60:
+            return "C"
+        elif percentage >= 50:
+            return "D"
+        else:
+            return "F"
+
+    def display_student(self):
+        print("\n----- Student Details -----")
+        print("Roll No:", self.roll_no)
+        print("Name:", self.name)
+        print("Marks:", self.marks)
+        print("Total Marks:", self.calculate_total())
+        print("Percentage:", self.calculate_percentage())
+        print("Grade:", self.calculate_grade())
+
+    def to_dictionary(self):
+        return {
+            "roll_no": self.roll_no,
+            "name": self.name,
+            "marks": self.marks
+        }
+
+
+class StudentManagementSystem:
+    def __init__(self):
+        self.students = []
+        self.filename = "students.json"
+        self.load_students()
+
+    # Add Student
+    def add_student(self):
+        roll_no = input("Enter Roll Number: ")
+
+        # Check duplicate roll number
+        for student in self.students:
+            if student.roll_no == roll_no:
+                print("Student already exists!")
+                return
+
+        name = input("Enter Student Name: ")
+
+        marks = {}
+
+        subjects = ["Python", "SQL", "Maths"]
+
+        for subject in subjects:
+            mark = float(input(f"Enter marks in {subject}: "))
+            marks[subject] = mark
+
+        student = Student(roll_no, name, marks)
+
+        self.students.append(student)
+        self.save_students()
+
+        print("Student added successfully!")
+
+    # Display All Students
+    def display_all_students(self):
+        if not self.students:
+            print("No students found!")
+            return
+
+        for student in self.students:
+            student.display_student()
+
+    # Search Student
+    def search_student(self):
+        roll_no = input("Enter Roll Number to search: ")
+
+        for student in self.students:
+            if student.roll_no == roll_no:
+                student.display_student()
+                return
+
+        print("Student not found!")
+
+    # Update Student
+    def update_student(self):
+        roll_no = input("Enter Roll Number to update: ")
+
+        for student in self.students:
+            if student.roll_no == roll_no:
+
+                student.name = input("Enter new name: ")
+
+                for subject in student.marks:
+                    new_marks = float(
+                        input(f"Enter new marks in {subject}: ")
+                    )
+                    student.marks[subject] = new_marks
+
+                self.save_students()
+
+                print("Student updated successfully!")
+                return
+
+        print("Student not found!")
+
+    # Delete Student
+    def delete_student(self):
+        roll_no = input("Enter Roll Number to delete: ")
+
+        for student in self.students:
+            if student.roll_no == roll_no:
+                self.students.remove(student)
+                self.save_students()
+
+                print("Student deleted successfully!")
+                return
+
+        print("Student not found!")
+
+    # Save Data in File
+    def save_students(self):
+        data = []
+
+        for student in self.students:
+            data.append(student.to_dictionary())
+
+        with open(self.filename, "w") as file:
+            json.dump(data, file, indent=4)
+
+    # Load Data from File
+    def load_students(self):
+        try:
+            with open(self.filename, "r") as file:
+                data = json.load(file)
+
+                for item in data:
+                    student = Student(
+                        item["roll_no"],
+                        item["name"],
+                        item["marks"]
+                    )
+
+                    self.students.append(student)
+
+        except FileNotFoundError:
+            self.students = []
+
+
+# Main Program
+system = StudentManagementSystem()
+
+while True:
+    print("\n========== STUDENT MANAGEMENT SYSTEM ==========")
+    print("1. Add Student")
+    print("2. Display All Students")
+    print("3. Search Student")
+    print("4. Update Student")
+    print("5. Delete Student")
+    print("6. Exit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        system.add_student()
+
+    elif choice == "2":
+        system.display_all_students()
+
+    elif choice == "3":
+        system.search_student()
+
+    elif choice == "4":
+        system.update_student()
+
+    elif choice == "5":
+        system.delete_student()
+
+    elif choice == "6":
+        print("Thank you for using Student Management System!")
+        break
+
+    else:
+        print("Invalid choice!")

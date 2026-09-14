@@ -1,0 +1,140 @@
+# ATM Simulator
+
+correct_pin = "1234"
+balance = 10000
+transactions = []
+
+
+# PIN Login Function
+def login():
+    attempts = 3
+
+    while attempts > 0:
+        pin = input("Enter your 4-digit PIN: ")
+
+        if pin == correct_pin:
+            print("\nLogin Successful!")
+            return True
+        else:
+            attempts -= 1
+            print("Incorrect PIN!")
+            print("Attempts remaining:", attempts)
+
+    print("Your card is blocked!")
+    return False
+
+
+# Balance Enquiry Function
+def check_balance():
+    print("\nYour current balance is: ₹", balance)
+
+
+# Withdrawal Function
+def withdraw():
+    global balance
+
+    try:
+        amount = float(input("Enter withdrawal amount: ₹"))
+
+        if amount <= 0:
+            print("Amount must be greater than zero.")
+
+        elif amount > balance:
+            print("Insufficient balance!")
+
+        else:
+            balance -= amount
+
+            transactions.append(
+                f"Withdrawn: ₹{amount}"
+            )
+
+            print("Please collect your cash.")
+            print("Remaining balance: ₹", balance)
+
+    except ValueError:
+        print("Invalid input! Please enter a number.")
+
+
+# Deposit Function
+def deposit():
+    global balance
+
+    try:
+        amount = float(input("Enter deposit amount: ₹"))
+
+        if amount <= 0:
+            print("Amount must be greater than zero.")
+
+        else:
+            balance += amount
+
+            transactions.append(
+                f"Deposited: ₹{amount}"
+            )
+
+            print("Amount deposited successfully!")
+            print("Updated balance: ₹", balance)
+
+    except ValueError:
+        print("Invalid input! Please enter a number.")
+
+
+# Mini Statement Function
+def mini_statement():
+    print("\n========== MINI STATEMENT ==========")
+
+    if len(transactions) == 0:
+        print("No transactions available.")
+
+    else:
+        for transaction in transactions:
+            print(transaction)
+
+    print("Current Balance: ₹", balance)
+
+
+# ATM Menu Function
+def atm_menu():
+    while True:
+
+        print("\n========== ATM MENU ==========")
+        print("1. Balance Enquiry")
+        print("2. Withdraw Cash")
+        print("3. Deposit Cash")
+        print("4. Mini Statement")
+        print("5. Exit")
+
+        try:
+            choice = int(input("Enter your choice: "))
+
+            if choice == 1:
+                check_balance()
+
+            elif choice == 2:
+                withdraw()
+
+            elif choice == 3:
+                deposit()
+
+            elif choice == 4:
+                mini_statement()
+
+            elif choice == 5:
+                print("Thank you for using our ATM!")
+                break
+
+            else:
+                print("Invalid choice! Select 1 to 5.")
+
+        except ValueError:
+            print("Please enter a valid number.")
+
+
+# Main Program
+print("========== WELCOME TO ATM ==========")
+
+if login():
+    atm_menu()
+else:
+    print("Transaction cancelled.")
