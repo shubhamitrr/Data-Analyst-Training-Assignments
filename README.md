@@ -152,10 +152,10 @@ Through these assignments, I am working on:
 
 ## 📂 File Structure
 
+```text
 Data-Analyst-Training-Assignments/
 │
 ├── Assignment-1/
-│   │
 │   ├── Student-Management-System/
 │   │   └── student_management.py
 │   │
@@ -163,7 +163,6 @@ Data-Analyst-Training-Assignments/
 │       └── atm_simulator.py
 │
 ├── Assignment-2/
-│   │
 │   ├── Project-01-Student-Performance/
 │   │   └── student_performance.ipynb
 │   │
@@ -185,6 +184,7 @@ Data-Analyst-Training-Assignments/
 ├── .gitignore
 │
 └── README.md
+```
 
 ### SQL Projects
 
